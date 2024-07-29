@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News Articles</title>
+    <style>
+      .image {
+        height: 250px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .title {
+        font-size: 24px;
+      }
+      .news-card {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .news-container {
+        display: grid;
+        gap: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="news-container"></div>
+    <script>
+      fetch(
+        "https://newsapi.org/v2/top-headlines?country=in&apiKey=cda86e36f8e14d8c8ec3b23e86e39c8e&from=2024-07-18&category=entertainment"
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(typeof res);
+          const newsContainer = document.querySelector(".news-container");
+          data.articles.forEach((newsData) => {
+            const newsCard = document.createElement("div");
+            newsCard.classList.add("news-card");
+
+            const imageDiv = document.createElement("div");
+            imageDiv.classList.add("image");
+            if (newsData.urlToImage) {
+              imageDiv.style.backgroundImage = `url(${newsData.urlToImage})`;
+            } else {
+              imageDiv.style.backgroundImage = `url('https://st.depositphotos.com/1987177/3470/v/950/depositphotos_34700099-stock-illustration-no-photo-available-or-missing.jpg')`;
+            }
+
+            const title = document.createElement("h1");
+            title.classList.add("title");
+            title.innerHTML = newsData?.title ?? "No Data Available";
+
+            const date = document.createElement("h4");
+            date.classList.add("date");
+            date.innerHTML = newsData?.publishedAt
+              ? `Published on : ${newsData.publishedAt.slice(0, 10)}`
+              : "No Date Available";
+
+            const description = document.createElement("p");
+            description.classList.add("description");
+            description.innerHTML =
+              newsData?.description ?? "Description not Available 😭";
+
+            const author = document.createElement("h3");
+            author.classList.add("author");
+            author.innerHTML = newsData?.author ?? "No Author Available";
+
+            newsCard.appendChild(imageDiv);
+            newsCard.appendChild(title);
+            newsCard.appendChild(date);
+            newsCard.appendChild(description);
+            newsCard.appendChild(author);
+
+            newsContainer.appendChild(newsCard);
+
+            console.log(newsData);
+          });
+        });
+    </script>
+  </body>
+</html>
